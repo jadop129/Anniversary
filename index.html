@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>9 Months of Us 💛</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #fdf8f0;
+      --blush: #f2d4c2;
+      --rose:  #c9736a;
+      --deep:  #6b2d2d;
+      --gold:  #c9a96e;
+      --warm:  #e8c4a0;
+      --text:  #3a1a1a;
+      --soft:  #9e6060;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--cream); color: var(--text); font-family: 'Jost', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+    /* ── Lock Screen ── */
+    #lock-screen {
+      position: fixed; inset: 0; z-index: 9999;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, #f5ddd0cc 0%, transparent 70%),
+                  radial-gradient(ellipse 60% 40% at 80% 100%, #e8b89066 0%, transparent 60%), var(--cream);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 32px; text-align: center;
+    }
+    .lock-petals { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .lock-icon { font-size: 2.8rem; margin-bottom: 20px; animation: pulse 2.5s ease-in-out infinite; }
+    #lock-screen h1 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(2rem, 7vw, 3.5rem); color: var(--deep); line-height: 1.1; margin-bottom: 10px;
+    }
+    #lock-screen h1 em { font-style: italic; color: var(--rose); }
+    .lock-sub {
+      font-size: clamp(0.85rem, 2vw, 1rem); color: var(--soft); margin-bottom: 36px;
+      font-style: italic; font-family: 'Cormorant Garamond', serif;
+    }
+    .lock-input-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; max-width: 320px; }
+    .lock-input-wrap input {
+      width: 100%; padding: 14px 20px; border: 1px solid var(--blush); background: #fff8f4;
+      font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--deep);
+      text-align: center; letter-spacing: 0.3em; outline: none; transition: border-color 0.3s;
+    }
+    .lock-input-wrap input:focus { border-color: var(--gold); }
+    .lock-input-wrap input::placeholder { letter-spacing: 0.15em; color: #d4b0a8; font-size: 1rem; }
+    .lock-btn {
+      width: 100%; padding: 13px 24px; background: var(--deep); color: var(--cream); border: none; cursor: pointer;
+      font-family: 'Jost', sans-serif; font-weight: 300; font-size: 0.8rem; letter-spacing: 0.35em;
+      text-transform: uppercase; transition: background 0.3s;
+    }
+    .lock-btn:hover { background: var(--rose); }
+    .lock-error { font-size: 0.8rem; color: var(--rose); letter-spacing: 0.1em; height: 18px; }
+
+    /* ── Wait Screen ── */
+    #wait-screen {
+      position: fixed; inset: 0; z-index: 9998; background: var(--cream);
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 40px;
+    }
+    .wait-icon { font-size: 3rem; margin-bottom: 24px; animation: pulse 3s ease-in-out infinite; }
+    #wait-screen h2 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.8rem, 6vw, 3rem); color: var(--deep); margin-bottom: 16px; line-height: 1.2;
+    }
+    #wait-screen h2 em { color: var(--rose); font-style: italic; }
+    #wait-screen p { font-size: 1rem; color: var(--soft); max-width: 420px; line-height: 1.8; margin-bottom: 20px; }
+    #countdown { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 9vw, 5rem); color: var(--gold); letter-spacing: 0.05em; margin: 16px 0; }
+    .wait-poem { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; color: var(--rose); margin-top: 8px; }
+
+    /* ── Admin Panel ── */
+    #admin-panel {
+      display: none; position: fixed; top: 0; right: 0;
+      width: min(500px, 100vw); height: 100vh; z-index: 8888;
+      background: #fff8f4; border-left: 2px solid var(--blush);
+      overflow-y: auto; padding: 28px 24px 60px;
+      box-shadow: -8px 0 40px #6b2d2d18;
+    }
+    #admin-panel h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--deep); margin-bottom: 4px; }
+    .admin-sub { font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--soft); margin-bottom: 24px; display: block; }
+    .admin-field { margin-bottom: 22px; }
+    .admin-field label { display: block; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .admin-field textarea {
+      width: 100%; min-height: 130px; padding: 12px 14px; border: 1px solid var(--blush);
+      background: var(--cream); font-family: 'Jost', sans-serif; font-size: 0.88rem;
+      line-height: 1.7; color: var(--text); resize: vertical; outline: none; transition: border-color 0.3s;
+    }
+    .admin-field textarea:focus { border-color: var(--gold); }
+    .admin-save-btn {
+      width: 100%; padding: 13px; background: var(--deep); color: var(--cream); border: none; cursor: pointer;
+      font-family: 'Jost', sans-serif; font-size: 0.75rem; letter-spacing: 0.35em; text-transform: uppercase;
+      margin-top: 6px; transition: background 0.3s;
+    }
+    .admin-save-btn:hover { background: var(--rose); }
+    .admin-close-btn { position: sticky; top: 0; float: right; background: none; border: none; font-size: 1.5rem; color: var(--soft); cursor: pointer; padding: 0 0 16px 16px; line-height: 1; }
+    .admin-saved-msg { text-align: center; font-size: 0.78rem; color: #7a9e7a; letter-spacing: 0.2em; height: 20px; margin-top: 10px; }
+    #admin-toggle {
+      position: fixed; bottom: 20px; right: 20px; z-index: 8887;
+      background: var(--deep); color: var(--cream); border: none;
+      width: 48px; height: 48px; border-radius: 50%; font-size: 1.2rem; cursor: pointer;
+      display: none; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px #6b2d2d44; transition: background 0.3s;
+    }
+    #admin-toggle:hover { background: var(--rose); }
+
+    /* ── Petals ── */
+    .petals { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .petal {
+      position: absolute; top: -60px; width: 12px; height: 18px;
+      background: radial-gradient(ellipse at 40% 40%, #f7cfc4, #e8a89c88);
+      border-radius: 50% 0 50% 0; opacity: 0; animation: fall linear infinite;
+    }
+    .petal:nth-child(odd) { border-radius: 0 50% 0 50%; background: radial-gradient(ellipse at 60% 40%, #f5e4d4, #dbb08888); }
+    @keyframes fall {
+      0%   { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0; }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(105vh) rotate(360deg) translateX(60px); opacity: 0; }
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative; min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center; padding: 60px 24px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, #f5ddd088 0%, transparent 70%),
+                  radial-gradient(ellipse 60% 40% at 80% 100%, #e8b89044 0%, transparent 60%), var(--cream);
+      z-index: 1;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle 1px at 20% 30%, var(--gold) 1px, transparent 0),
+        radial-gradient(circle 1px at 75% 20%, var(--rose) 1px, transparent 0),
+        radial-gradient(circle 1px at 55% 80%, var(--gold) 1px, transparent 0),
+        radial-gradient(circle 1px at 10% 70%, var(--blush) 1px, transparent 0),
+        radial-gradient(circle 1px at 90% 60%, var(--warm) 1px, transparent 0);
+      opacity: 0.5; pointer-events: none;
+    }
+    .eyebrow { font-weight: 200; font-size: clamp(0.7rem,2vw,0.85rem); letter-spacing: 0.35em; text-transform: uppercase; color: var(--soft); margin-bottom: 28px; opacity: 0; animation: fadeUp 1s ease forwards 0.3s; }
+    .hero-date { font-family: 'Cormorant Garamond', serif; font-size: clamp(0.9rem,2.5vw,1.1rem); font-style: italic; color: var(--gold); letter-spacing: 0.2em; margin-bottom: 16px; opacity: 0; animation: fadeUp 1s ease forwards 0.5s; }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(3.5rem,12vw,9rem); line-height: 0.95; color: var(--deep); letter-spacing: -0.02em; opacity: 0; animation: fadeUp 1.2s ease forwards 0.7s; }
+    .hero h1 em { font-style: italic; color: var(--rose); display: block; }
+    .hero-sub { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem,3.5vw,1.8rem); font-style: italic; color: var(--soft); margin-top: 24px; opacity: 0; animation: fadeUp 1s ease forwards 1.1s; }
+    .divider { display: flex; align-items: center; gap: 16px; margin: 40px auto; width: fit-content; opacity: 0; animation: fadeUp 1s ease forwards 1.3s; }
+    .divider-line { width: 80px; height: 1px; background: linear-gradient(to right, transparent, var(--gold)); }
+    .divider-line.right { background: linear-gradient(to left, transparent, var(--gold)); }
+    .divider-heart { color: var(--rose); font-size: 1.1rem; animation: pulse 2s ease-in-out infinite; }
+    .scroll-hint { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--soft); font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; opacity: 0; animation: fadeUp 1s ease forwards 2s; }
+    .scroll-arrow { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+    @keyframes scrollPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    /* ── Sections ── */
+    section { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 80px 32px; }
+    section + section { padding-top: 0; }
+    .section-label { font-weight: 200; font-size: 0.7rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    h2 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(2rem,6vw,3.2rem); line-height: 1.15; color: var(--deep); margin-bottom: 28px; }
+    h2 em { font-style: italic; color: var(--rose); }
+    p { font-size: clamp(0.95rem,2.2vw,1.08rem); line-height: 1.9; color: #5a3030; margin-bottom: 20px; }
+    p:last-child { margin-bottom: 0; }
+    .quote-block { border-left: 2px solid var(--gold); padding: 20px 28px; margin: 48px 0; background: linear-gradient(135deg, #fdf0e888, transparent); }
+    .quote-block p { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.3rem,3.5vw,1.7rem); font-style: italic; font-weight: 300; color: var(--deep); margin: 0; line-height: 1.6; }
+    .number-row { display: flex; gap: 0; margin: 60px 0; border: 1px solid var(--blush); }
+    .number-item { flex: 1; text-align: center; padding: 36px 16px; border-right: 1px solid var(--blush); }
+    .number-item:last-child { border-right: none; }
+    .number-item .num { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem,7vw,4rem); font-weight: 300; color: var(--rose); display: block; line-height: 1; }
+    .number-item .label { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--soft); display: block; margin-top: 8px; }
+    .ornament-band { position: relative; z-index: 1; width: 100%; background: linear-gradient(135deg, var(--deep) 0%, #8b3535 100%); padding: 80px 32px; text-align: center; overflow: hidden; }
+    .ornament-band::before { content: '❧'; position: absolute; font-size: 30rem; color: #ffffff08; top: 50%; left: 50%; transform: translate(-50%,-50%); line-height: 1; }
+    .ornament-band h2 { color: var(--cream); font-size: clamp(1.8rem,5vw,3rem); max-width: 600px; margin: 0 auto 24px; }
+    .ornament-band h2 em { color: var(--warm); }
+    .ornament-band p { color: #f0d8d0bb; max-width: 540px; margin: 0 auto; font-size: 1rem; }
+    .closing { text-align: center; padding: 100px 32px; position: relative; z-index: 1; }
+    .closing .big-heart { font-size: 3.5rem; display: block; margin-bottom: 24px; animation: pulse 2.5s ease-in-out infinite; }
+    .closing h2 { font-size: clamp(2.2rem,7vw,4rem); margin-bottom: 16px; }
+    .closing .names { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.3rem,4vw,2rem); font-style: italic; color: var(--gold); letter-spacing: 0.1em; }
+    .closing .forever { margin-top: 48px; font-size: 0.7rem; letter-spacing: 0.5em; text-transform: uppercase; color: var(--soft); }
+    footer { position: relative; z-index: 1; text-align: center; padding: 24px; font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--warm); border-top: 1px solid var(--blush); }
+
+    /* ── Animations ── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.9s ease, transform 0.9s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- ══ LOCK SCREEN ══ -->
+<div id="lock-screen">
+  <div class="lock-petals" id="lock-petals"></div>
+  <div class="lock-icon">🌹</div>
+  <h1>For <em>Mariam</em></h1>
+  <p class="lock-sub">Enter the password to open your surprise</p>
+  <div class="lock-input-wrap">
+    <input type="password" id="pass-input" placeholder="password" autocomplete="off" />
+    <div class="lock-error" id="lock-error"></div>
+    <button class="lock-btn" onclick="checkPassword()">Open ♥</button>
+  </div>
+</div>
+
+<!-- ══ WAIT SCREEN ══ -->
+<div id="wait-screen">
+  <div class="wait-icon">⏳</div>
+  <h2>Not yet, <em>Mariam</em> 🌸</h2>
+  <p>Jad has something beautiful waiting for you — but it unlocks at midnight. Come back when the clock strikes 12:00 AM!</p>
+  <div id="countdown">--:--:--</div>
+  <p class="wait-poem">"Good things come to those who wait…"</p>
+</div>
+
+<!-- ══ ADMIN PANEL ══ -->
+<div id="admin-panel">
+  <button class="admin-close-btn" onclick="toggleAdmin()">✕</button>
+  <h3>✍️ Edit Content</h3>
+  <span class="admin-sub">Jad's Admin Panel · Saves to browser storage</span>
+
+  <div class="admin-field"><label>Chapter I — Paragraph 1</label>
+    <textarea id="ed-c1p1" placeholder="Write your first paragraph for Chapter I here..."></textarea></div>
+
+  <div class="admin-field"><label>Chapter I — Paragraph 2</label>
+    <textarea id="ed-c1p2" placeholder="Write your second paragraph for Chapter I here..."></textarea></div>
+
+  <div class="admin-field"><label>Quote Block (italic quote)</label>
+    <textarea id="ed-quote" rows="4" placeholder="Write a meaningful quote or your own words..."></textarea></div>
+
+  <div class="admin-field"><label>Chapter II — Paragraph 1</label>
+    <textarea id="ed-c2p1" placeholder="Chapter II, first paragraph..."></textarea></div>
+
+  <div class="admin-field"><label>Chapter II — Paragraph 2</label>
+    <textarea id="ed-c2p2" placeholder="Chapter II, second paragraph..."></textarea></div>
+
+  <div class="admin-field"><label>Chapter II — Paragraph 3</label>
+    <textarea id="ed-c2p3" rows="4" placeholder="Chapter II, third paragraph..."></textarea></div>
+
+  <div class="admin-field"><label>Dark Band — Center Text</label>
+    <textarea id="ed-band" rows="4" placeholder="Text inside the dark red banner section..."></textarea></div>
+
+  <div class="admin-field"><label>Chapter III — Paragraph 1</label>
+    <textarea id="ed-c3p1" placeholder="Chapter III, first paragraph..."></textarea></div>
+
+  <div class="admin-field"><label>Chapter III — Paragraph 2</label>
+    <textarea id="ed-c3p2" placeholder="Chapter III, second paragraph..."></textarea></div>
+
+  <div class="admin-field"><label>Chapter III — Paragraph 3</label>
+    <textarea id="ed-c3p3" placeholder="Chapter III, third paragraph..."></textarea></div>
+
+  <div class="admin-field"><label>Chapter IV — Paragraph 1</label>
+    <textarea id="ed-c4p1" placeholder="Chapter IV, first paragraph..."></textarea></div>
+
+  <div class="admin-field"><label>Chapter IV — Paragraph 2</label>
+    <textarea id="ed-c4p2" placeholder="Chapter IV, second paragraph..."></textarea></div>
+
+  <div class="admin-field"><label>Chapter IV — Paragraph 3</label>
+    <textarea id="ed-c4p3" placeholder="Chapter IV, third paragraph..."></textarea></div>
+
+  <button class="admin-save-btn" onclick="saveContent()">💾 Save All Changes</button>
+  <div class="admin-saved-msg" id="saved-msg"></div>
+</div>
+
+<button id="admin-toggle" onclick="toggleAdmin()">✏️</button>
+
+<!-- ══ MAIN SITE ══ -->
+<div id="main-site" style="display:none;">
+
+  <div class="petals" id="petals"></div>
+
+  <div class="hero">
+    <p class="eyebrow">A celebration of love</p>
+    <p class="hero-date">August 4, 2025 → May 4, 2026 → for ever</p>
+    <h1>Nine <em>Months</em></h1>
+    <p class="hero-sub">of choosing each other, every single day</p>
+    <div class="divider">
+      <span class="divider-line"></span>
+      <span class="divider-heart">♥</span>
+      <span class="divider-line right"></span>
+    </div>
+    <div class="scroll-hint"><span>Scroll</span><span class="scroll-arrow"></span></div>
+  </div>
+
+  <section>
+    <div class="number-row reveal">
+      <div class="number-item"><span class="num">9</span><span class="label">Months</span></div>
+      <div class="number-item"><span class="num">274</span><span class="label">Days</span></div>
+      <div class="number-item"><span class="num">∞</span><span class="label">Memories</span></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label reveal">Chapter I</p>
+    <h2 class="reveal">The day <em>everything</em> changed</h2>
+    <p class="reveal" id="c1p1">There are moments in life that split time into a before and an after. August 4, 2024 was that moment for us. It was just an ordinary day on the calendar — nothing circled, nothing planned — and yet somehow, in the quiet way that the most important things tend to happen, the world quietly rearranged itself. You walked in, and something in the air shifted. Something that had been searching without knowing it was searching finally recognized what it had been looking for.</p>
+    <p class="reveal" id="c1p2">I don't think I could have predicted you. Not the way you laugh at your own jokes half a second before you finish them, not the way your eyes go soft when you're listening to something that matters to you, not the way you manage to make even the most ordinary Tuesday feel like something worth remembering. You arrived in my life the way good things often do — all at once, and absolutely right on time.</p>
+    <div class="quote-block reveal"><p id="quote-text">"To love is to find in someone else's being the mirror of your own, and to be endlessly glad of what you see reflected back."</p></div>
+  </section>
+
+  <section>
+    <p class="section-label reveal">Chapter II</p>
+    <h2 class="reveal">What nine months <em>really means</em></h2>
+    <p class="reveal" id="c2p1">Nine months is not a long time in the grand scope of things. And yet, in love, time is measured differently. It is measured in conversations that stretched past midnight, in the growing ease of silences that didn't need to be filled. It is measured in the first time something made me think immediately of you — a song, a color, a stupid joke — and how that reflex never stopped, only deepened. Nine months is the distance between a stranger and someone who has become the texture of my everyday life.</p>
+    <p class="reveal" id="c2p2">In these nine months, we have built something real. Not the rushed, paper-thin version of love that burns hot and fast, but the kind that is patient, that makes room, that knows how to stay. We have learned each other's rhythms — when to push and when to give space, when words are needed and when presence is enough. We have argued and apologized and come out understanding each other a little more fully each time. That, I have come to believe, is what love actually is: the willingness to keep choosing someone even after you have seen all the complicated, beautiful, messy truth of who they are.</p>
+    <p class="reveal" id="c2p3">And I choose you. Today, tomorrow, and in every ordinary Tuesday that comes after this one.</p>
+  </section>
+
+  <div class="ornament-band reveal">
+    <h2>You make my <em>ordinary</em> extraordinary</h2>
+    <p id="band-text">It is not the grand gestures that I will carry with me. It is the small ones — the way you reach for my hand, the look you give me across a room, the thousand tiny moments that add up to a life I am genuinely grateful for.</p>
+  </div>
+
+  <section>
+    <p class="section-label reveal">Chapter III</p>
+    <h2 class="reveal">Everything <em>I love</em> about us</h2>
+    <p class="reveal" id="c3p1">I love that we are honest with each other — not cruelly, but genuinely, in the way that only happens between people who trust that the truth will not break what they have built. I love that we have inside jokes that would make no sense to anyone else, small private languages that are entirely ours. I love the way we navigate the world together, comparing notes, laughing at the same things, getting quietly passionate about the things we care about.</p>
+    <p class="reveal" id="c3p2">I love who I am when I am with you. Not a better version of myself in some forced, performative way — but more fully myself. More willing to be seen. Less afraid of taking up space in my own life. You have that effect on me: a kind of quiet courage that comes from knowing there is someone in your corner who genuinely sees you and thinks you are worth seeing.</p>
+    <p class="reveal" id="c3p3">I love that this is still the beginning. Nine months in, and I am still discovering things about you that surprise me, that delight me, that make me think: yes, there it is, another reason. The reasons keep accumulating, and I don't think they'll ever stop.</p>
+  </section>
+
+  <section>
+    <p class="section-label reveal">Chapter IV</p>
+    <h2 class="reveal">Here is what I <em>promise you</em></h2>
+    <p class="reveal" id="c4p1">I promise to keep showing up — not perfectly, not always gracefully, but consistently, because that is what I believe love really asks of us. I promise to listen, even when it's hard, even when I'd rather be right. I promise to celebrate you — not just in the big moments, but in the quiet ones too, in the Tuesday afternoons and the unremarkable evenings that are, really, where most of life lives.</p>
+    <p class="reveal" id="c4p2">I promise to keep learning you. You are not a puzzle to be solved but a person to be known, and that knowing is a gift I don't intend to take lightly. I promise to make room for your growth even when it is unfamiliar to me, and to ask you to make room for mine. I promise to remember, on the hard days, that difficulty is not a sign that something is wrong — sometimes it is a sign that something is real enough to be worth the effort.</p>
+    <p class="reveal" id="c4p3">And I promise to never stop telling you that I am glad you exist, because I am, every single day, genuinely and completely glad that you exist, and that somehow, out of all the possible paths and coincidences and choices, yours crossed mine.</p>
+  </section>
+
+  <div class="closing">
+    <span class="big-heart reveal">♥</span>
+    <h2 class="reveal">Happy <em>9 Months,</em> my love</h2>
+    <p class="names reveal">Jad &amp; Mariam</p>
+    <p class="forever reveal">August 4, 2025 — forever counting</p>
+  </div>
+
+  <footer>Made with love by Jad · May 4, 2025</footer>
+
+</div><!-- /main-site -->
+
+<script>
+/* ══════════════════════════════════
+   PASSWORDS — change ADMIN_PASS to your secret
+══════════════════════════════════ */
+const MARIAM_PASS = '4/8/25';
+const ADMIN_PASS  = '12'; // ← Change this to your own secret admin password
+
+/* ══ Password Check ══ */
+function checkPassword() {
+  const val = document.getElementById('pass-input').value.trim();
+  const err = document.getElementById('lock-error');
+
+  if (val === ADMIN_PASS) {
+    document.getElementById('lock-screen').style.display = 'none';
+    showSite();
+    const btn = document.getElementById('admin-toggle');
+    btn.style.display = 'flex';
+    setTimeout(loadContentIntoEditor, 300);
+    return;
+  }
+
+  if (val === MARIAM_PASS) {
+    const now = new Date();
+    // Midnight = start of May 4, 2025 in local time
+    const unlock = new Date(2026, 4, 4, 0, 0, 0); // May 4 2026 midnight local time
+    console.log('NOW:', now.toString());
+    console.log('UNLOCK:', unlock.toString());
+    console.log('Locked?', now < unlock);
+    if (now < unlock) {
+      document.getElementById('lock-screen').style.display = 'none';
+      document.getElementById('wait-screen').style.display = 'flex';
+      startCountdown();
+    } else {
+      document.getElementById('lock-screen').style.display = 'none';
+      showSite();
+    }
+    return;
+  }
+
+  err.textContent = 'Wrong password. Try again ♥';
+  document.getElementById('pass-input').value = '';
+  setTimeout(() => { err.textContent = ''; }, 3000);
+}
+
+document.getElementById('pass-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkPassword();
+});
+
+/* ══ Show Site ══ */
+function showSite() {
+  document.getElementById('main-site').style.display = 'block';
+  applyStoredContent();
+  initPetals('petals');
+  initReveal();
+}
+
+/* ══ Countdown to midnight May 4 → May 5 ══ */
+function startCountdown() {
+  const unlock = new Date(2026, 4, 4, 0, 0, 0); // May 4 2026 midnight local time
+  function tick() {
+    const now = new Date();
+    let diff = unlock - now;
+    if (diff <= 0) {
+      document.getElementById('wait-screen').style.display = 'none';
+      showSite(); return;
+    }
+    const h = Math.floor(diff/3600000); diff -= h*3600000;
+    const m = Math.floor(diff/60000);   diff -= m*60000;
+    const s = Math.floor(diff/1000);
+    document.getElementById('countdown').textContent =
+      String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  }
+  tick(); setInterval(tick, 1000);
+}
+
+/* ══ Admin Panel ══ */
+let adminOpen = false;
+function toggleAdmin() {
+  adminOpen = !adminOpen;
+  document.getElementById('admin-panel').style.display = adminOpen ? 'block' : 'none';
+}
+
+const FIELDS = [
+  {id:'ed-c1p1', target:'c1p1'}, {id:'ed-c1p2', target:'c1p2'},
+  {id:'ed-quote', target:'quote-text'},
+  {id:'ed-c2p1', target:'c2p1'}, {id:'ed-c2p2', target:'c2p2'}, {id:'ed-c2p3', target:'c2p3'},
+  {id:'ed-band',  target:'band-text'},
+  {id:'ed-c3p1', target:'c3p1'}, {id:'ed-c3p2', target:'c3p2'}, {id:'ed-c3p3', target:'c3p3'},
+  {id:'ed-c4p1', target:'c4p1'}, {id:'ed-c4p2', target:'c4p2'}, {id:'ed-c4p3', target:'c4p3'},
+];
+
+function loadContentIntoEditor() {
+  FIELDS.forEach(f => {
+    const stored = localStorage.getItem('ann_' + f.target);
+    const el = document.getElementById(f.target);
+    const textarea = document.getElementById(f.id);
+    if (!textarea) return;
+    textarea.value = stored || (el ? el.innerText.trim() : '');
+  });
+}
+
+function saveContent() {
+  FIELDS.forEach(f => {
+    const val = document.getElementById(f.id)?.value.trim();
+    if (val) {
+      localStorage.setItem('ann_' + f.target, val);
+      const el = document.getElementById(f.target);
+      if (el) el.innerText = val;
+    }
+  });
+  const msg = document.getElementById('saved-msg');
+  msg.textContent = '✓ All changes saved!';
+  setTimeout(() => { msg.textContent = ''; }, 3000);
+}
+
+function applyStoredContent() {
+  FIELDS.forEach(f => {
+    const stored = localStorage.getItem('ann_' + f.target);
+    if (stored) { const el = document.getElementById(f.target); if (el) el.innerText = stored; }
+  });
+}
+
+/* ══ Petals ══ */
+function initPetals(id) {
+  const c = document.getElementById(id); if (!c) return;
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div'); p.className = 'petal';
+    p.style.left = Math.random()*100+'%';
+    p.style.width  = (8+Math.random()*10)+'px';
+    p.style.height = (12+Math.random()*14)+'px';
+    p.style.animationDuration = (8+Math.random()*10)+'s';
+    p.style.animationDelay   = (Math.random()*12)+'s';
+    c.appendChild(p);
+  }
+}
+
+// Lock screen petals
+(function(){
+  const c = document.getElementById('lock-petals');
+  for(let i=0;i<14;i++){
+    const p = document.createElement('div'); p.className='petal';
+    p.style.left=(Math.random()*100)+'%';
+    p.style.width=(6+Math.random()*8)+'px';
+    p.style.height=(9+Math.random()*11)+'px';
+    p.style.animationDuration=(10+Math.random()*9)+'s';
+    p.style.animationDelay=(Math.random()*16)+'s';
+    c.appendChild(p);
+  }
+})();
+
+/* ══ Scroll Reveal ══ */
+function initReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }});
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+</script>
+</body>
+</html>
